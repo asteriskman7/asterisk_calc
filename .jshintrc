@@ -1,0 +1,10 @@
+{
+  "strict": "global",
+  "esversion": 9,
+  "browser": true,
+  "devel": true,
+  "loopfunc": true,
+  "globals": {
+    "App": true
+  }
+}

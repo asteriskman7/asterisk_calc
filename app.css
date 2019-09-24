@@ -1,0 +1,46 @@
+* {
+  margin: 0;
+  padding: 0;
+  touch-action: none;
+  font-family: monospace;
+}
+
+body, html {
+  height: 100%
+}
+
+.gridContainer {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  /*grid-template-columns: auto;*/
+  grid-template-rows: auto repeat(11, 100px);
+}
+
+.textDisplay {
+  width: 100%;
+  height: 100%;
+  font-size: 70px;
+}
+
+.gridButtonRow5 {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.gridButtonRow8 {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+}
+
+.gridButton {
+  outline: 1px solid black;
+  text-align: center;
+  font-size: 70px;
+}
+
+.gridButton:hover {
+  background: grey;
+}
