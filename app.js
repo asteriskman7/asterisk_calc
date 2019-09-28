@@ -1,8 +1,7 @@
 'use strict';
 
 class App {
-  constructor(spriteHandler) {
-    this.spriteHandler = spriteHandler;
+  constructor() {
     this.init();
     this.loaded = false;
   }
@@ -43,10 +42,10 @@ class App {
 
     const container = document.getElementById('divContainer');
     const gridDisplay = addElement(container, 'div', 'gridDisplay');
-    addElement(gridDisplay, 'textArea', 'textDisplay');
+    this.textArea = addElement(gridDisplay, 'textArea', 'textDisplay');
 
     const buttons = [
-      'M+,MR,MC,2nd,fix',
+      'CLR,?,?,2nd,fix',
       '<,>,del,prev,type',
       'and,or,xor,not,base',
       'A,B,C,D,E',
@@ -54,7 +53,7 @@ class App {
       '^2,^1/2,sin,cos,tan',
       'T,G,M,K,m,u,n,p',
       '7,8,9,(,)',
-      '4,5,6,X,/',
+      '4,5,6,*,/',
       '1,2,3,+,-',
       '0,.,EXP,ANS,='
     ];
@@ -70,9 +69,45 @@ class App {
     });
 
   }
-  
+
+  fixExpression(e) {
+    e = e.replace(/(sin|cos|tan)/g, 'Math.$1');
+    e = e.replace(/Pi/g, 'Math.PI')
+    return e;
+  }
+
   buttonClick(name) {
     console.log('click', name);
+    window.navigator.vibrate(10);
+    switch (name) {
+      case 'CLR':
+        app.textArea.value = '';
+        break;
+      case 'sin':
+      case 'cos':
+      case 'tan':
+        app.textArea.value += `${name}(`;
+        break;
+      case '=':
+        let result;
+        const finalLine = app.textArea.value.split`\n`.pop() ;
+        console.log('finalLine', `"${finalLine}"`);
+        const fixedLine = app.fixExpression(finalLine);
+        console.log('eval', `"${fixedLine}"`)
+        try {
+          result = eval(fixedLine);
+        }
+        catch(error) {
+          window.e = error;
+          result = error.message;
+        }
+        console.log('result', `"${result}"`);
+        app.textArea.value += `\n${result}\n`;
+        break;
+      default:
+        app.textArea.value += name;
+    }
+
   }
 
 }

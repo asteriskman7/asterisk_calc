@@ -17,10 +17,15 @@ body, html {
   grid-template-rows: auto repeat(11, 100px);
 }
 
+.gridDisplay {
+  width: 100%;
+  height: 100%;
+}
+
 .textDisplay {
   width: 100%;
   height: 100%;
-  font-size: 70px;
+  font-size: 5em;
 }
 
 .gridButtonRow5 {
@@ -39,6 +44,7 @@ body, html {
   outline: 1px solid black;
   text-align: center;
   font-size: 70px;
+  z-index: 99;
 }
 
 .gridButton:hover {
