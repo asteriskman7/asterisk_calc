@@ -1,6 +1,8 @@
-# asterisk_calc
+# asterisk_calc ![logo of calculator behind koch snowflake](./asterisk_calc_full.png)
 
 https://asteriskman7.github.io/asterisk_calc/
+
+Prototype Image:
 
 ![idea image](./calc.png)
 
