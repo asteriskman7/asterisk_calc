@@ -51,7 +51,7 @@ class App {
       'A,B,C,D,E',
       '1/x,mod,ln,Pi,F',
       '^2,^1/2,sin,cos,tan',
-      'T,G,M,K,m,u,n,p',
+      'T,G,M,k,m,u,n,p',
       '7,8,9,(,)',
       '4,5,6,*,/',
       '1,2,3,+,-',
@@ -71,8 +71,30 @@ class App {
   }
 
   fixExpression(e) {
+    //make trig work
     e = e.replace(/(sin|cos|tan)/g, 'Math.$1');
-    e = e.replace(/Pi/g, 'Math.PI')
+    //let Pi work
+    e = e.replace(/Pi/g, 'Math.PI');
+    //let hex work
+    //let binary work
+    //let SI prefixes work
+    [['T', '1e12'],
+     ['G', '1e9'],
+     ['M', '1e6'],
+     ['k', '1e3'],
+     ['m', '1e-3'],
+     ['u', '1e-6'],
+     ['n', '1e-9'],
+     ['p', '1e-12']
+   ].forEach( v => {
+     const [prefix, value] = v;
+     //number with optional decimal part followed by 0 or more spaces and the prefix
+     const r = new RegExp(`([0-9]+(\\.[0-9]+)?)\\s*${prefix}`, 'g');
+     e = e.replace(r, `( $1 * ${value} )`);
+   });
+    //let mod work
+    e = e.replace(/mod\(([^,]+),([^)]+)\)/g, ' $1 % $2 ');
+
     return e;
   }
 
@@ -93,7 +115,7 @@ class App {
         const finalLine = app.textArea.value.split`\n`.pop() ;
         console.log('finalLine', `"${finalLine}"`);
         const fixedLine = app.fixExpression(finalLine);
-        console.log('eval', `"${fixedLine}"`)
+        console.log('eval', `"${fixedLine}"`);
         try {
           result = eval(fixedLine);
         }
