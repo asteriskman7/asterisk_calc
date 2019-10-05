@@ -1,0 +1,21 @@
+{
+  "short_name": "asterisk calc",
+  "name": "asterisk calc",
+  "icons": [
+    {
+      "src": "./asterisk_calc192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "./asterisk_calc512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/asterisk_calc_config",
+  "background_color": "#A6E85B",
+  "display": "standalone",
+  "scope": "/asterisk_calc",
+  "theme_color": "#A6E85B"
+}
