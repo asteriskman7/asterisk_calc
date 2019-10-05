@@ -13,9 +13,9 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "/asterisk_calc_config",
+  "start_url": "/asterisk_calc/",
   "background_color": "#A6E85B",
   "display": "standalone",
-  "scope": "/asterisk_calc",
+  "scope": "/asterisk_calc/",
   "theme_color": "#A6E85B"
 }
