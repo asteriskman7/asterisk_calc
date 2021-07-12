@@ -1,5 +1,11 @@
 'use strict';
 
+/*
+  TODO:
+  get prev to copy the previous statement into the current line
+  get different bases to work
+*/
+
 class App {
   constructor() {
     this.init();
@@ -18,6 +24,8 @@ class App {
     this.updateMath();
 
     this.loadConfig();
+
+    this.ans = 0;
 
   }
 
@@ -77,7 +85,7 @@ class App {
       ['7','8','9','(',')'],
       ['4','5','6','*','/'],
       ['1','2','3','+','-'],
-      ['0','.','EXP','ANS','=']
+      ['0','.','E','ANS','=']
     ];
 
     buttons.forEach(row => {
@@ -94,13 +102,19 @@ class App {
 
   updateMath() {
     Math.and = (a, b) => a & b;
+    Math.or = (a, b) => a | b;
+    Math.xor = (a, b) => a ^ b;
+    Math.not = (a) => ~a;
+    Math.mod = (a, b) => a % b;
   }
 
   fixExpression(e) {
     //make trig work
-    e = e.replace(/(sin|cos|tan|and|or|xor|not)/g, 'Math.$1');
+    e = e.replace(/(sin|cos|tan|and|or|xor|not|mod)/g, 'Math.$1');
     //let Pi work
     e = e.replace(/Pi/g, 'Math.PI');
+    //let exponenets work
+    e = e.replace(/\^/g, '**');
     //let hex work
     //let binary work
     //let SI prefixes work
@@ -118,8 +132,6 @@ class App {
      const r = new RegExp(`([0-9]+(\\.[0-9]+)?)\\s*${prefix}`, 'g');
      e = e.replace(r, `( $1 * ${value} )`);
    });
-    //let mod work
-    e = e.replace(/mod\(([^,]+),([^)]+)\)/g, ' $1 % $2 ');
 
     return e;
   }
@@ -148,7 +160,8 @@ class App {
         case 'eng':
 
           let exponent = parseInt(result.toExponential().split`e`[1]);
-          let mantissa = result;
+          let sign = Math.sign(result);
+          let mantissa = Math.abs(result);
           let unitsCount = 0;
           if (exponent >= 0) {
             while (mantissa >= 1000) {
@@ -171,8 +184,9 @@ class App {
           if (prefix === undefined) {
             result = result.toExponential(this.config.decimals);
           } else {
-            result = this.toFixed(mantissa) + prefix;
+            result = sign * this.toFixed(mantissa) + prefix;
           }
+
           break;
       }
     } else {
@@ -185,6 +199,17 @@ class App {
   buttonClick(name) {
     console.log('click', name);
     window.navigator.vibrate(10);
+
+    //for some operations, prefix ANS if this is the first thing on the line
+    const presumedAnsPrefixOps = '*,/,+,-,^2,^1/2'.split`,`;
+    if (presumedAnsPrefixOps.indexOf(name) !== -1) {
+      const finalLine = app.textArea.value.split`\n`.pop() ;
+      if (finalLine.length === 0) {
+        app.textArea.value += 'ANS';
+      }
+
+    }
+
     switch (name) {
       case 'type':
         app.config.format = {'default': 'sci', 'sci': 'eng', 'eng': 'default'}[app.config.format];
@@ -218,7 +243,12 @@ class App {
       case 'or':
       case 'xor':
       case 'not':
+      case 'mod':
+      case 'ln':
         app.textArea.value += `${name}(`;
+        break;
+      case '^1/2':
+        app.textArea.value += '^(1/2)';
         break;
       case '=':
         let result;
@@ -226,8 +256,11 @@ class App {
         console.log('finalLine', `"${finalLine}"`);
         const fixedLine = app.fixExpression(finalLine);
         console.log('eval', `"${fixedLine}"`);
+        const ANS = this.ans;
         try {
-          result = this.formatResult(eval(fixedLine));
+          const rawResult = eval(fixedLine);
+          this.ans = rawResult;
+          result = this.formatResult(rawResult);
         }
         catch(error) {
           window.e = error;
