@@ -98,6 +98,9 @@ class App {
       });
     });
 
+    //allow keyboard use
+    document.getElementsByTagName('body').item(0).onkeypress = e => this.buttonClick(e.key);
+
   }
 
   updateMath() {
@@ -250,6 +253,7 @@ class App {
       case '^1/2':
         app.textArea.value += '^(1/2)';
         break;
+      case 'Enter':
       case '=':
         let result;
         const finalLine = app.textArea.value.split`\n`.pop() ;
